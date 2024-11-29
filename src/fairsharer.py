@@ -17,8 +17,10 @@ def fair_sharer(values: list, num_iterations: int = 1, share: float = 0.1):
     num_iteration:
     Integer to set the number of iterations
     """
-    if type(values) not in [list, np.ndarray, np.linalg.matrix] or type(num_iterations) != int or type(share) != float:
-        raise TypeError("Fehlerbeschreibung")
+    dtype_checker(values, [np.ndarray, np.matrix])
+    dtype_checker(num_iterations, int)
+    dtype_checker(share, float)
+    values = list_converter(values)
     for _ in range(num_iterations):
         max_value = max(values)
         i_max_val = values.index(max_value)
@@ -28,6 +30,20 @@ def fair_sharer(values: list, num_iterations: int = 1, share: float = 0.1):
         values[(i_max_val - 1) % len(values) ] += share_real
     values_new = values
     return values_new
+
+
+def dtype_checker(object, dtype):
+    """Checks if object is of accepted type."""
+    if type(object) not in dtype:
+        raise TypeError(f"Object is unsupported type {dtype}")
+
+def list_converter(object):
+    """Flattens numpy arrays and matrices, converts them to lists."""
+    if type(object) in [np.ndarray, np.matrix]:
+        object = object.flatten()
+        object = object.tolist()
+        print("Warning: Numpy array or matrix has been converted to list. Check dimensionality of input-object: might have been unintentionally flattened.")
+    return object
 
 if __name__ == "__main__":
     print(fair_sharer([0, 1000, 800, 0], num_iterations=2))
