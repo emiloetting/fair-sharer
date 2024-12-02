@@ -35,7 +35,8 @@ def fair_sharer(values: list, num_iterations: int = 1, share: float = 0.1):
 def dtype_checker(object, dtype):
     """Checks if object is of accepted type."""
     if not isinstance(object, dtype):
-        raise TypeError(f"Object of unsupported type {dtype}")
+        raise TypeError(f"Object of unsupported type {dtype}. Expected {dtype}.")
+    return True
 
 def list_converter(object):
     """Flattens numpy arrays and matrices, converts them to lists."""
