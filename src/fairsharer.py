@@ -18,6 +18,7 @@ def fair_sharer(values: list, num_iterations: int = 1, share: float = 0.1):
     #Checks for input types, converts if necessary
     #Important: np.matrix + np.ndarray will be flattened to 1D list
     dtype_checker(values, (list, np.ndarray, np.matrix))
+    dtype_checker(num_iterations, (int, np.integer)) #to allow for numpy integers, but no other types
     dtype_checker(share, float)
     values = list_converter(values)
 
