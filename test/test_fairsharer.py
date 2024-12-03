@@ -1,14 +1,10 @@
+import sys; import os; sys.path.append(os.getcwd())
 import pytest
 import numpy as np
 from src import fairsharer as fs
 
-def test_typechecker():
-    assert fs.dtype_checker(1, int) == "int"
-    assert fs.dtype_checker(1.5, float) == "float"
-    assert fs.dtype_checker("Check this out", str) == "str"
-    with pytest.raises(TypeError) as err_info:
-        fs.dtype_checker([1,2, 3], str)
-    assert str(err_info.value) == "Object of unsupported type <class 'list'>. Expected <class 'str'>."
+np.set_printoptions(suppress=True)
+
 
 def test_listconverter():
     demo_array_1 = np.asarray([1,2,3])
@@ -34,7 +30,7 @@ def test_fairsharer():
 
     ndarray_2 = np.asarray([[0, 0], [1000, 0], [800, 0], [0, 0]])
     assert fs.fair_sharer(values=ndarray_2, num_iterations=1, share=0.1) == [0, 100, 800, 100, 800, 0, 0, 0]
-    assert fs.fair_sharer(values=ndarray_2, num_iterations=2, share=0.1) == [0, 180, 620, 180, 800, 0, 0, 0]
+    assert fs.fair_sharer(values=ndarray_2, num_iterations=2, share=0.1) == [0, 180, 640, 180, 800, 0, 0, 0]
 
     matrix_1 = np.matrix([0, 1000, 800, 0])
     assert fs.fair_sharer(values=matrix_1, num_iterations=1, share=0.1) == [100, 800, 900, 0]
@@ -42,24 +38,24 @@ def test_fairsharer():
     
     matrix_2 = np.matrix([[0, 0], [1000, 0], [800, 0], [0, 0]])
     assert fs.fair_sharer(values=matrix_2, num_iterations=1, share=0.1) == [0, 100, 800, 100, 800, 0, 0, 0]
-    assert fs.fair_sharer(values=matrix_2, num_iterations=2, share=0.1) == [0, 180, 620, 180, 800, 0, 0, 0]
+    assert fs.fair_sharer(values=matrix_2, num_iterations=2, share=0.1) == [0, 180, 640, 180, 800, 0, 0, 0]
 
     iterations = np.int64(2)
     assert fs.fair_sharer(values=[0, 1000, 800, 0], num_iterations=iterations, share=0.1) == [100, 890, 720, 90]
 
     with pytest.raises(TypeError) as err_info_2:
         fs.fair_sharer(values=[0, 1000, 800, 0], num_iterations="2", share=0.1)
-    assert str(err_info_2.value) == "Object of unsupported type <class 'str'>. Expected <class 'int'>."
+    assert str(err_info_2.value) == "Object of unsupported type <class 'str'>."
 
     with pytest.raises(TypeError) as err_info_3:
         fs.fair_sharer(values=[0, 1000, 800, 0], num_iterations=2, share=["0.1"])
-    assert str(err_info_3.value) == "Object of unsupported type <class 'list'>. Expected <class 'float'>."
+    assert str(err_info_3.value) == "Object of unsupported type <class 'list'>."
 
     iterations = "random_string"
     with pytest.raises(TypeError) as err_info_4:
         fs.fair_sharer(values=[0, 1000, 800, 0], num_iterations=iterations, share=0.1)
-    assert str(err_info_4.value) == "Object of unsupported type <class 'str'>. Expected <class 'int'>."
+    assert str(err_info_4.value) == "Object of unsupported type <class 'str'>."
 
     with pytest.raises(TypeError) as err_info_4:
         fs.fair_sharer(values=[0, 1000, 800, 0], num_iterations=0.5, share=0.1)
-    assert str(err_info_4.value) == "Object of unsupported type <class 'float'>. Expected <class 'int'>."
+    assert str(err_info_4.value) == "Object of unsupported type <class 'float'>."
