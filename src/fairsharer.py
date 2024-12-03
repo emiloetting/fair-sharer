@@ -15,11 +15,14 @@ def fair_sharer(values: list, num_iterations: int = 1, share: float = 0.1):
     num_iteration:
     Integer to set the number of iterations
     """
-    #Checks for input types, converts if necessary
+
     #Important: np.matrix + np.ndarray will be flattened to 1D list
-    dtype_checker(values, (list, np.ndarray, np.matrix))
-    dtype_checker(num_iterations, (int, np.integer)) #to allow for numpy integers, but no other types
-    dtype_checker(share, float)
+    if not isinstance(values, (list, np.ndarray, np.matrix)):
+        raise TypeError(f"Object of unsupported type {type(values)}.")
+    if not isinstance(num_iterations, (int, np.integer)):
+        raise TypeError(f"Object of unsupported type {type(num_iterations)}.")
+    if not isinstance(share, float) or not np.issubdtype(type(share), np.floating):
+        raise TypeError(f"Object of unsupported type {type(share)}.")
     values = list_converter(values)
 
     #actual function
@@ -31,13 +34,7 @@ def fair_sharer(values: list, num_iterations: int = 1, share: float = 0.1):
         values[(i_max_val + 1) % len(values) ] += share_real
         values[(i_max_val - 1) % len(values) ] += share_real
     values_new = values
-    return values_new
-
-def dtype_checker(object, dtype):
-    """Checks if object is of accepted type."""
-    if not isinstance(object, dtype):
-        raise TypeError(f"Object of unsupported type {dtype}. Expected {dtype}.")
-    return True
+    return list(values_new)
 
 def list_converter(object):
     """Flattens numpy arrays and matrices, converts them to lists."""
